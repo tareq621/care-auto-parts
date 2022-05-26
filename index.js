@@ -33,25 +33,6 @@ async function run() {
             const item = await purchaseCollection.findOne(query);
             res.send(item);
         });
-
-        app.post('/order', async (req, res) => {
-            const order = req.body;
-            const result = await orderCollection.insertOne(order);
-            res.send(result);
-        })
-
-        app.get('/review', async (req, res) => {
-            const query = {};
-            const cursor = reviewCollection.find(query);
-            const reviews = await cursor.toArray();
-            res.send(reviews);
-        })
-
-        app.post('/review', async (req, res) => {
-            const newReview = req.body;
-            const reviewResult = await reviewCollection.insertOne(newReview);
-            req.send(reviewResult);
-        })
     }
 
     finally {
