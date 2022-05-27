@@ -1,6 +1,7 @@
 const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -38,7 +39,8 @@ async function run() {
                 $set: user,
             };
             const result = await userCollection.updateOne(filter, updateDoc, options);
-            res.send(result);
+            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET)
+            res.send({ result, token });
         })
 
         app.post('/purchase', async (req, res) => {
@@ -53,7 +55,6 @@ async function run() {
             const item = await purchaseCollection.findOne(query);
             res.send(item);
         });
-
 
         app.get('/profile', async (req, res) => {
             const query = {};
@@ -93,6 +94,14 @@ async function run() {
             const orderResult = await orderCollection.insertOne(order);
             res.send(orderResult);
         });
+
+        app.get('/order', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = orderCollection.find(query);
+            const orders = await cursor.toArray();
+            res.send(orders);
+        })
 
         app.get('/review', async (req, res) => {
             const query = {};
