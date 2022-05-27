@@ -19,6 +19,7 @@ async function run() {
         const purchaseCollection = client.db('assignment12').collection('products');
         const orderCollection = client.db('assignment12').collection('order');
         const reviewCollection = client.db('assignment12').collection('review');
+        const profileCollection = client.db('assignment12').collection('profile');
 
         app.get('/purchase', async (req, res) => {
             const query = {};
@@ -30,7 +31,7 @@ async function run() {
         app.post('/purchase', async (req, res) => {
             const newParts = req.body;
             const result = await purchaseCollection.insertOne(newParts);
-            req.send(result);
+            res.send(result);
         })
 
         app.get('/purchase/:id', async (req, res) => {
@@ -40,12 +41,10 @@ async function run() {
             res.send(item);
         });
 
-
-
         app.post('/order', async (req, res) => {
             const order = req.body;
-            const result = await orderCollection.insertOne(order);
-            res.send(result);
+            const orderResult = await orderCollection.insertOne(order);
+            res.send(orderResult);
         })
 
         app.get('/review', async (req, res) => {
@@ -58,7 +57,14 @@ async function run() {
         app.post('/review', async (req, res) => {
             const newReview = req.body;
             const reviewResult = await reviewCollection.insertOne(newReview);
-            req.send(reviewResult);
+            res.send(reviewResult);
+        })
+
+        app.post('/profile', async (req, res) => {
+            const newProfile = req.body;
+            const profileResult = await profileCollection.insertOne(newProfile);
+            res.send(profileResult);
+
         })
     }
 
