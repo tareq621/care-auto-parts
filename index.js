@@ -177,12 +177,11 @@ async function run() {
 
         });
 
-        app.delete('/order/:email', async (req, res) => {
-            const email = req.query.email;
-            const filter = { email: email };
-            const result = await orderCollection.deleteOne(filter);
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
             res.send(result);
-
         })
 
     }
