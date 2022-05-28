@@ -2,7 +2,7 @@ const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const { send } = require('express/lib/response');
+const use = require('express/lib/response');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -52,7 +52,7 @@ async function run() {
             res.send(users);
         })
 
-        app.put('/users/admin/:email', async (req, res) => {
+        app.put('/users/admin/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
             const filter = { email: email };
             const updateDoc = {
