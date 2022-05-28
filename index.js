@@ -176,6 +176,15 @@ async function run() {
             res.send(profileResult);
 
         });
+
+        app.delete('/order/:email', async (req, res) => {
+            const email = req.query.email;
+            const filter = { email: email };
+            const result = await orderCollection.deleteOne(filter);
+            res.send(result);
+
+        })
+
     }
 
     finally {
