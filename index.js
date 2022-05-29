@@ -142,7 +142,10 @@ async function run() {
             const orderResult = await orderCollection.insertOne(order);
             res.send(orderResult);
         });
-
+        app.get('/order', async (req, res) => {
+            const allOrders = await orderCollection.find().toArray();
+            res.send(allOrders);
+        })
         app.get('/order', verifyJWT, async (req, res) => {
             const email = req.query.email;
             const decodedEmail = req.decoded.email;
