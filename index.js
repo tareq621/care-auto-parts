@@ -11,8 +11,8 @@ app.use(cors());
 app.use(express.json());
 
 
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.k5dj1.mongodb.net/?retryWrites=true&w=majority`;
+
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -142,10 +142,12 @@ async function run() {
             const orderResult = await orderCollection.insertOne(order);
             res.send(orderResult);
         });
-        app.get('/order', async (req, res) => {
+
+        app.get('/order', verifyJWT, async (req, res) => {
             const allOrders = await orderCollection.find().toArray();
             res.send(allOrders);
         })
+
         app.get('/order', verifyJWT, async (req, res) => {
             const email = req.query.email;
             const decodedEmail = req.decoded.email;
