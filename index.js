@@ -167,7 +167,7 @@ async function run() {
         app.get('/order/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const orders = await orderCollection.find(query);
+            const orders = await orderCollection.findOne(query);
             res.send(orders);
         })
 
