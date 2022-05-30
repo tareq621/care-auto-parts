@@ -3,7 +3,6 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const use = require('express/lib/response');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -49,23 +48,6 @@ async function run() {
             const products = await cursor.toArray();
             res.send(products);
         });
-
-        app.post('/create-payment-intent', verifyJWT, async (req, res) => {
-            const purchase = req.body;
-            const price = purchase.price;
-            const amount = price * 100;
-            const paymentIntent = await stripe.paymentIntents.create({
-                amount: amount,
-                currency: 'usd',
-                payment_method_types: ['card']
-            });
-            res.send({ clientSecret: paymentIntent.client_secret });
-        });
-
-        app.get('/users', verifyJWT, async (req, res) => {
-            const users = await userCollection.find().toArray();
-            res.send(users);
-        })
 
         app.get('/admin/:email', async (req, res) => {
             const email = req.params.email;
@@ -133,24 +115,7 @@ async function run() {
             res.send(profileResult);
         });
 
-        app.put('/profile/:id', async (req, res) => {
-            const id = req.params.id;
-            const updateProfile = req.body;
-            const filter = { _id: ObjectId(id) };
-            const options = { upsert: true };
-            const updateDoc = {
-                $set: {
-                    name: updateProfile.name,
-                    email: updateProfile.email,
-                    city: updateProfile.city,
-                    zip: updateProfile.zip,
-                    education: updateProfile.education,
-                    phoneNumber: updateProfile.phoneNumber
-                }
-            };
-            const result = await profileCollection.updateOne(filter, updateDoc, options);
-            res.send(result);
-        })
+
 
         app.post('/order', async (req, res) => {
             const order = req.body;
