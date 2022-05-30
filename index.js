@@ -120,7 +120,7 @@ async function run() {
             res.send(profileResult);
         });
 
-        app.put('/dashboard/profile/:id', async (req, res) => {
+        app.put('/profile/:id', async (req, res) => {
             const id = req.params.id;
             const updateProfile = req.body;
             const filter = { _id: ObjectId(id) };
