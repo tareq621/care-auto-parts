@@ -164,6 +164,13 @@ async function run() {
             }
         })
 
+        app.get('/order/:id', verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const orders = await orderCollection.find(query);
+            res.send(orders);
+        })
+
         app.get('/review', async (req, res) => {
             const query = {};
             const cursor = reviewCollection.find(query);
